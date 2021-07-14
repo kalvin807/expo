@@ -110,7 +110,32 @@ export async function findModulesAsync(providedOptions: SearchOptions): Promise<
       }
     }
   }
-  return results;
+
+  return await filterProjectDependenciesAsync(await findPackageJsonPathAsync(), results);
+}
+
+async function filterProjectDependenciesAsync(packageJsonPath: string, results: SearchResults) {
+  const filteredResults: SearchResults = {};
+
+  function visitPackage(packageJsonPath: string) {
+    const packageJson = require(packageJsonPath);
+
+    for (const dependencyName in packageJson.dependencies) {
+      const dependencyResult = results[dependencyName];
+
+      if (dependencyResult && !filteredResults[dependencyName]) {
+        filteredResults[dependencyName] = dependencyResult;
+        visitPackage(path.join(dependencyResult.path, 'package.json'));
+      }
+    }
+  }
+
+  visitPackage(packageJsonPath);
+
+  console.log(filteredResults);
+  console.log(Object.keys(results).length, Object.keys(filteredResults).length);
+
+  return filteredResults;
 }
 
 /**
