@@ -48,7 +48,7 @@
     "expo-web-browser": "~9.2.0",
     "firebase": "8.2.3",
     "i18n-js": "^3.0.11",
-    "immutable": "^3.8.1",
+    "immutable": "^3.8.3",
     "jasmine-core": "^2.4.1",
     "lodash": "^4.17.4",
     "react": "16.13.1",
